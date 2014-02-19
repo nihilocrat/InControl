@@ -115,7 +115,7 @@ namespace InControl
 						return true;
 					}
 				}
-				else if(joystick == joystickName)
+				else if(string.Equals(joystick, joystickName, StringComparison.OrdinalIgnoreCase))
 				{
 					return true;
 				}
