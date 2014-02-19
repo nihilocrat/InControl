@@ -24,6 +24,8 @@ namespace InControl
 		protected string[] SupportedPlatforms;
 		protected string[] JoystickNames;
 
+		protected string RegexName;
+
 		static HashSet<Type> hideList = new HashSet<Type>();
 
 		float sensitivity;
@@ -87,13 +89,16 @@ namespace InControl
 
 		public bool IsJoystick 
 		{ 
-			get { return JoystickNames != null && JoystickNames.Length > 0; } 
+			get 
+			{ 
+				return (RegexName != null) || (JoystickNames != null && JoystickNames.Length > 0); 
+			} 
 		}
 
 
 		public bool IsNotJoystick
 		{ 
-			get { return JoystickNames == null || JoystickNames.Length == 0; } 
+			get { return !IsJoystick; } 
 		}
 
 
@@ -104,24 +109,34 @@ namespace InControl
 				return false;
 			}
 
-			foreach(string joystick in JoystickNames)
+			if (JoystickNames == null)
 			{
-				if(joystick.First() == '/' && joystick.Last() == '/')
-				{
-					string joystickRegex = joystick.Split('/')[0];
-					
-					if(Regex.IsMatch(joystickName, joystickRegex, RegexOptions.IgnoreCase))
-					{
-						return true;
-					}
-				}
-				else if(string.Equals(joystick, joystickName, StringComparison.OrdinalIgnoreCase))
-				{
-					return true;
-				}
+				return false;
 			}
 
-			return false;
+			return JoystickNames.Contains( joystickName, StringComparer.OrdinalIgnoreCase );
+		}
+
+
+		public bool HasRegexName( string joystickName )
+		{
+			if (IsNotJoystick)
+			{
+				return false;
+			}
+
+			if (RegexName == null)
+			{
+				return false;
+			}
+
+			return Regex.IsMatch( joystickName, RegexName, RegexOptions.IgnoreCase );
+		}
+
+
+		public bool HasJoystickOrRegexName( string joystickName )
+		{
+			return HasJoystickName( joystickName ) || HasRegexName( joystickName );
 		}
 
 
