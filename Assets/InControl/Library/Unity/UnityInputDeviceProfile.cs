@@ -224,6 +224,11 @@ namespace InControl
 		protected static InputControlSource MouseYAxis       = new UnityMouseAxisSource( "y" );
 		protected static InputControlSource MouseScrollWheel = new UnityMouseAxisSource( "z" );
 
+		protected static InputControlSource MultiSource( params InputControlSource[] sources )
+		{
+			return new MultiSource( sources );
+		}
+
 		#endregion
 	}
 }
