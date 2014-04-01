@@ -20,17 +20,13 @@ namespace InControl
 
 			JoystickNames = new[]
 			{
-				"",
-				"/.+?x\\-?box 360.+?/",
-				"Mad Catz, Inc. Mad Catz FPS Pro GamePad",
-				".+?Gamepad F310.+?",
-				"Xbox Gamepad (Userspace driver)",
+				"Microsoft X-Box 360 pad",
 			};
 
 			RegexName = "360";
 
 			Sensitivity = 1.0f;
-			LowerDeadZone = 0.3f;
+			LowerDeadZone = 0.2f;
 
 			ButtonMappings = new[]
 			{
@@ -84,9 +80,29 @@ namespace InControl
 				},
 				new InputControlMapping
 				{
-					Handle = "Start",
-					Target = InputControlType.Start,
-					Source = Button7
+					Handle = "DPad Left",
+					Target = InputControlType.DPadLeft,
+					Source = Button11,
+					Invert = true
+				},
+				new InputControlMapping
+				{
+					Handle = "DPad Right",
+					Target = InputControlType.DPadRight,
+					Source = Button12,
+				},
+				new InputControlMapping
+				{
+					Handle = "DPad Up",
+					Target = InputControlType.DPadUp,
+					Source = Button13,
+					Invert = true
+				},
+				new InputControlMapping
+				{
+					Handle = "DPad Down",
+					Target = InputControlType.DPadDown,
+					Source = Button14,
 				},
 				new InputControlMapping
 				{
@@ -96,9 +112,15 @@ namespace InControl
 				},
 				new InputControlMapping
 				{
-					Handle = "System",
-					Target = InputControlType.System,
-					Source = Button15
+					Handle = "Start",
+					Target = InputControlType.Start,
+					Source = Button7
+				},
+				new InputControlMapping
+				{
+					Handle = "Menu",
+					Target = InputControlType.Menu,
+					Source = Button8
 				}
 			};
 
@@ -121,28 +143,14 @@ namespace InControl
 				{
 					Handle = "Right Stick X",
 					Target = InputControlType.RightStickX,
-					Source = Analog3
+					Source = Analog3,
+					Invert = true
 				},
 				new InputControlMapping
 				{
 					Handle = "Right Stick Y",
 					Target = InputControlType.RightStickY,
-					Source = Analog4,
-					Invert = true
-				},
-				new InputControlMapping
-				{
-					Handle = "Left Trigger",
-					Target = InputControlType.LeftTrigger,
-					Source = Analog2,
-					TargetRange = InputControlMapping.Range.Positive
-				},
-				new InputControlMapping
-				{
-					Handle = "Right Trigger",
-					Target = InputControlType.RightTrigger,
-					Source = Analog5,
-					TargetRange = InputControlMapping.Range.Positive
+					Source = Analog4
 				},
 				new InputControlMapping
 				{
@@ -166,18 +174,30 @@ namespace InControl
 					Handle = "DPad Up",
 					Target = InputControlType.DPadUp,
 					Source = Analog7,
-					SourceRange = InputControlMapping.Range.Positive,
-					TargetRange = InputControlMapping.Range.Positive
+					SourceRange = InputControlMapping.Range.Negative,
+					TargetRange = InputControlMapping.Range.Negative,
+					Invert = true
 				},
 				new InputControlMapping
 				{
 					Handle = "DPad Down",
 					Target = InputControlType.DPadDown,
 					Source = Analog7,
-					SourceRange = InputControlMapping.Range.Negative,
-					TargetRange = InputControlMapping.Range.Negative,
-					Invert = true
+					SourceRange = InputControlMapping.Range.Positive,
+					TargetRange = InputControlMapping.Range.Positive
 				},
+				new InputControlMapping
+				{
+					Handle = "Left Trigger",
+					Target = InputControlType.LeftTrigger,
+					Source = Analog2
+				},
+				new InputControlMapping
+				{
+					Handle = "Right Trigger",
+					Target = InputControlType.RightTrigger,
+					Source = Analog5
+				}
 			};
 		}
 	}

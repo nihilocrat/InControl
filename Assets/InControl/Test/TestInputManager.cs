@@ -28,7 +28,7 @@ public class TestInputManager : MonoBehaviour
 		Logger.OnLogMessage += logMessage => logMessages.Add( logMessage );
 
 //		InputManager.HideDevicesWithProfile( typeof( Xbox360MacProfile ) );
-		InputManager.InvertYAxis = true;
+//		InputManager.InvertYAxis = true;
 //		InputManager.EnableXInput = true;
 		InputManager.Setup();
 
@@ -47,6 +47,7 @@ public class TestInputManager : MonoBehaviour
 	void FixedUpdate()
 	{
 		InputManager.Update();
+		CheckForPauseButton();
 
 		if (InputManager.ActiveDevice.Action1.WasPressed)
 		{
@@ -60,15 +61,19 @@ public class TestInputManager : MonoBehaviour
 		if (isPaused)
 		{
 			InputManager.Update();
+			CheckForPauseButton();
 		}
 
 		if (Input.GetKeyDown( KeyCode.R ))
 		{
 			Application.LoadLevel( "TestInputManager" );
 		}
+	}
 
-		if (Input.GetKeyDown( KeyCode.P ) || 
-		    InputManager.ActiveDevice.GetControl( InputControlType.Start ).WasPressed)
+
+	void CheckForPauseButton()
+	{
+		if (Input.GetKeyDown( KeyCode.P ) || InputManager.MenuWasPressed)
 		{
 			Time.timeScale = isPaused ? 1.0f : 0.0f;
 			isPaused = !isPaused;
@@ -121,23 +126,29 @@ public class TestInputManager : MonoBehaviour
 			GUI.Label( new Rect( x, y, x + w, y + 10 ), "SortOrder: " + inputDevice.SortOrder, style );
 			y += lineHeight;
 
-			GUI.Label( new Rect( x, y, x + w, y + 10 ), "LastChangeTime: " + inputDevice.LastChangeTime, style );
+			GUI.Label( new Rect( x, y, x + w, y + 10 ), "LastChangeTick: " + inputDevice.LastChangeTick, style );
 			y += lineHeight;
 
-			foreach (var analog in inputDevice.Analogs)
+			foreach (var control in inputDevice.Controls)
 			{
-				SetColor( analog.State ? Color.green : color );
-				var label = string.Format( "{0} ({1}) {2}", analog.Target, analog.Handle, analog.State ? "= " + analog.Value : "" );
-				GUI.Label( new Rect( x, y, x + w, y + 10 ), label, style );
-				y += lineHeight;
-			}
+				if (control != null)
+				{
+					string controlName;
 
-			foreach (var button in inputDevice.Buttons)
-			{
-				SetColor( button.State ? Color.green : color );
-				var label = string.Format( "{0} ({1}) {2}", button.Target, button.Handle, button.State ? "= True" : "" );
-				GUI.Label( new Rect( x, y, x + w, y + 10 ), label, style );
-				y += lineHeight;
+					if (inputDevice.IsKnown)
+					{
+						controlName = string.Format( "{0} ({1})", control.Target, control.Handle );
+					}
+					else
+					{
+						controlName = control.Handle;
+					}
+
+					SetColor( control.State ? Color.green : color );
+					var label = string.Format( "{0} {1}", controlName, control.State ? "= " + control.Value : "" );
+					GUI.Label( new Rect( x, y, x + w, y + 10 ), label, style );
+					y += lineHeight;
+				}
 			}
 
 			x += 200;
@@ -158,6 +169,14 @@ public class TestInputManager : MonoBehaviour
 				y -= lineHeight;
 			}
 		}
+	}
+
+
+	void OnDrawGizmos()
+	{
+		Vector3 delta = InputManager.ActiveDevice.Direction * 2.0f;
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawSphere( transform.position + delta, 1 );
 	}
 
 

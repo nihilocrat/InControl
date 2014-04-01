@@ -6,51 +6,51 @@ using System.Collections.Generic;
 namespace InControl
 {
 	[AutoDiscover]
-	public class ExecutionerXMacProfile : UnityInputDeviceProfile
+	public class SteelSeriesFreeLinuxProfile : UnityInputDeviceProfile
 	{
-		public ExecutionerXMacProfile()
+		public SteelSeriesFreeLinuxProfile()
 		{
-			Name = "Executioner X Controller";
-			Meta = "Executioner X Controller on Mac";
+			Name = "SteelSeries Free";
+			Meta = "SteelSeries Free on Linux";
 
 			SupportedPlatforms = new[]
 			{
-				"OS X"
+				"Linux",
 			};
 
 			JoystickNames = new[]
 			{
-				"Zeroplus PS Vibration Feedback Converter "
+				"Zeemote: SteelSeries FREE"
 			};
 
 			Sensitivity = 1.0f;
-			LowerDeadZone = 0.2f;
+			LowerDeadZone = 0.1f;
 
 			ButtonMappings = new[]
 			{
 				new InputControlMapping
 				{
-					Handle = "3",
+					Handle = "4",
 					Target = InputControlType.Action1,
-					Source = Button2
+					Source = Button0
 				},
 				new InputControlMapping
 				{
-					Handle = "2",
+					Handle = "3",
 					Target = InputControlType.Action2,
 					Source = Button1
 				},
 				new InputControlMapping
 				{
-					Handle = "4",
+					Handle = "1",
 					Target = InputControlType.Action3,
 					Source = Button3
 				},
 				new InputControlMapping
 				{
-					Handle = "1",
+					Handle = "2",
 					Target = InputControlType.Action4,
-					Source = Button0
+					Source = Button4
 				},
 				new InputControlMapping
 				{
@@ -64,41 +64,18 @@ namespace InControl
 					Target = InputControlType.RightBumper,
 					Source = Button7
 				},
+
+				new InputControlMapping
+				{
+					Handle = "Back",
+					Target = InputControlType.Select,
+					Source = Button12
+				},
 				new InputControlMapping
 				{
 					Handle = "Start",
 					Target = InputControlType.Start,
 					Source = Button11
-				},
-				new InputControlMapping
-				{
-					Handle = "Options",
-					Target = InputControlType.Select,
-					Source = Button8
-				},
-				new InputControlMapping
-				{
-					Handle = "Left Trigger",
-					Target = InputControlType.LeftTrigger,
-					Source = Button4
-				},
-				new InputControlMapping
-				{
-					Handle = "Right Trigger",
-					Target = InputControlType.RightTrigger,
-					Source = Button5
-				},
-				new InputControlMapping
-				{
-					Handle = "Left Stick Button",
-					Target = InputControlType.LeftStickButton,
-					Source = Button9
-				},
-				new InputControlMapping
-				{
-					Handle = "Right Stick Button",
-					Target = InputControlType.RightStickButton,
-					Source = Button10
 				}
 			};
 
@@ -134,7 +111,7 @@ namespace InControl
 				{
 					Handle = "DPad Left",
 					Target = InputControlType.DPadLeft,
-					Source = Analog6,
+					Source = Analog4,
 					SourceRange = InputControlMapping.Range.Negative,
 					TargetRange = InputControlMapping.Range.Negative,
 					Invert = true
@@ -143,15 +120,7 @@ namespace InControl
 				{
 					Handle = "DPad Right",
 					Target = InputControlType.DPadRight,
-					Source = Analog6,
-					SourceRange = InputControlMapping.Range.Positive,
-					TargetRange = InputControlMapping.Range.Positive
-				},
-				new InputControlMapping
-				{
-					Handle = "DPad Down",
-					Target = InputControlType.DPadDown,
-					Source = Analog7,
+					Source = Analog4,
 					SourceRange = InputControlMapping.Range.Positive,
 					TargetRange = InputControlMapping.Range.Positive
 				},
@@ -159,10 +128,19 @@ namespace InControl
 				{
 					Handle = "DPad Up",
 					Target = InputControlType.DPadUp,
-					Source = Analog7,
+					Source = Analog5,
 					SourceRange = InputControlMapping.Range.Negative,
 					TargetRange = InputControlMapping.Range.Negative,
 					Invert = true
+				},
+				new InputControlMapping
+				{
+					Handle = "DPad Down",
+					Target = InputControlType.DPadDown,
+					Source = Analog5,
+					SourceRange = InputControlMapping.Range.Positive,
+					TargetRange = InputControlMapping.Range.Positive,
+					Invert = false
 				}
 			};
 		}

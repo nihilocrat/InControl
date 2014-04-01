@@ -32,6 +32,8 @@ namespace InControl
 		static float currentTime;
 		static float lastUpdateTime;
 
+		static ulong currentTick;
+
 
 		public static void Setup()
 		{
@@ -43,6 +45,8 @@ namespace InControl
 			currentTime = 0.0f;
 			lastUpdateTime = 0.0f;
 
+			currentTick = 0;
+
 			inputDeviceManagers.Clear();
 			Devices.Clear();
 			activeDevice = InputDevice.Null;
@@ -53,15 +57,18 @@ namespace InControl
 
 			isSetup = true;
 
+			#if UNITY_STANDALONE_WIN || UNITY_EDITOR
 			if (enableXInput)
 			{
 				if (Application.platform == RuntimePlatform.WindowsPlayer ||
 					Application.platform == RuntimePlatform.WindowsEditor)
 				{
 					HideDevicesWithProfile( typeof( Xbox360WinProfile ) );
+					HideDevicesWithProfile( typeof( LogitechF710ModeXWinProfile ) );
 					InputManager.AddDeviceManager( new XInputDeviceManager() );
 				}
 			}
+			#endif
 
 			AddDeviceManager( new UnityInputDeviceManager() );
 		}
@@ -79,6 +86,8 @@ namespace InControl
 		public static void Update()
 		{
 			AssertIsSetup();
+
+			currentTick++;
 
 			UpdateCurrentTime();
 			UpdateDeviceManagers();
@@ -119,15 +128,14 @@ namespace InControl
 			AssertIsSetup();
 
 			inputDeviceManagers.Add( inputDeviceManager );
-			inputDeviceManager.Update( currentTime, currentTime - lastUpdateTime );
+			inputDeviceManager.Update( currentTick, currentTime - lastUpdateTime );
 		}
 
 
 		static void UpdateCurrentTime()
 		{
-			// Have to do this hack since Time.realtimeSinceStartup
-			// is not updated until AFTER Awake().
-			if (initialTime == 0.0f)
+			// Have to do this hack since Time.realtimeSinceStartup is not set until AFTER Awake().
+			if (initialTime < float.Epsilon)
 			{
 				initialTime = Time.realtimeSinceStartup;
 			}
@@ -144,7 +152,7 @@ namespace InControl
 			for (int i = 0; i < inputDeviceManagerCount; i++)
 			{
 				var inputDeviceManager = inputDeviceManagers[i];
-				inputDeviceManager.Update( currentTime, deltaTime );
+				inputDeviceManager.Update( currentTick, deltaTime );
 			}
 		}
 
@@ -153,12 +161,21 @@ namespace InControl
 		{
 			var deltaTime = currentTime - lastUpdateTime;
 
+			MenuWasPressed = false;
+
 			int deviceCount = Devices.Count;
 			for (int i = 0; i < deviceCount; i++)
 			{
 				var device = Devices[i];
-				device.Update( currentTime, deltaTime );
-				device.UpdateLastChangeTime( currentTime );
+
+				device.PreUpdate( currentTick, deltaTime );
+				device.Update( currentTick, deltaTime );
+				device.PostUpdate( currentTick, deltaTime );
+
+				if (device.MenuWasPressed)
+				{
+					MenuWasPressed = true;
+				}
 			}
 		}
 
@@ -260,6 +277,13 @@ namespace InControl
 				}
 				enableXInput = value;
 			}
+		}
+
+
+		public static bool MenuWasPressed
+		{
+			get;
+			private set;
 		}
 	}
 }

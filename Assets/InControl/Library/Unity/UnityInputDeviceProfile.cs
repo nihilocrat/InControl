@@ -152,6 +152,24 @@ namespace InControl
 		}
 
 
+		public virtual bool IsKnown
+		{
+			get { return true; }
+		}
+
+
+		public int AnalogCount
+		{
+			get { return AnalogMappings.Length; }
+		}
+
+
+		public int ButtonCount
+		{
+			get { return ButtonMappings.Length; }
+		}
+
+
 		#region InputControlSource Helpers
 
 		protected static InputControlSource Button( int index )
