@@ -15,11 +15,11 @@ namespace InControl
 
 	public class UnityInputDeviceProfile
 	{
-		public string Name { get; protected set; }
-		public string Meta { get; protected set; }
+		public string Name { get; set; }
+		public string Meta { get; set; }
 
-		public InputControlMapping[] AnalogMappings { get; protected set; }
-		public InputControlMapping[] ButtonMappings { get; protected set; }
+		public InputControlMapping[] AnalogMappings { get; set; }
+		public InputControlMapping[] ButtonMappings { get; set; }
 
 		protected string[] SupportedPlatforms;
 		protected string[] JoystickNames;
@@ -47,21 +47,21 @@ namespace InControl
 		public float Sensitivity
 		{ 
 			get { return sensitivity; }
-			protected set { sensitivity = Mathf.Clamp01( value ); }
+			set { sensitivity = Mathf.Clamp01( value ); }
 		}
 
 
 		public float LowerDeadZone
 		{ 
 			get { return lowerDeadZone; }
-			protected set { lowerDeadZone = Mathf.Clamp01( value ); }
+			set { lowerDeadZone = Mathf.Clamp01( value ); }
 		}
 
 
 		public float UpperDeadZone
 		{ 
 			get { return upperDeadZone; }
-			protected set { upperDeadZone = Mathf.Clamp01( value ); }
+			set { upperDeadZone = Mathf.Clamp01( value ); }
 		}
 
 

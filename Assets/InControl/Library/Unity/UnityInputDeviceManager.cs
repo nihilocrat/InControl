@@ -111,6 +111,12 @@ namespace InControl
 				matchedDeviceProfile = deviceProfiles.Find( config => config.HasRegexName( unityJoystickName ) );
 			}
 
+			// fallback to controls.ini
+			if (matchedDeviceProfile == null)
+			{
+				matchedDeviceProfile = DeviceProfileSerializer.GetCustomProfile(unityJoystickName);
+			}
+
 			UnityInputDeviceProfile deviceProfile = null;
 
 			if (matchedDeviceProfile == null)
