@@ -1,14 +1,27 @@
-Temp/*
-Build/*
-obj/*
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/Build/*
 
-*.pidb
-*.userprefs
+/*.csproj
+/*.unityproj
+/*.sln
+/*.suo
+/*.user
+/*.userprefs
+/*.pidb
+/*.booproj
+
 .DS_Store
-Library/metadata/*
-Library/*
+Thumbs.db
 
 /Assets/AssetStoreTools/
 /Assets/AssetStoreTools.meta
 
 /Documentation/
+/.dropbox.attr
+
+/Dev References
+
+/Assets/InControl/Examples/Touch.meta
+/Assets/InControl/Examples/Touch/

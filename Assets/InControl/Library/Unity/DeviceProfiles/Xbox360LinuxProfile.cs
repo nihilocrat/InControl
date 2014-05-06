@@ -21,9 +21,10 @@ namespace InControl
 			JoystickNames = new[]
 			{
 				"Microsoft X-Box 360 pad",
+				"Generic X-Box pad"
 			};
 
-			RegexName = "360";
+			LastResortRegex = "360";
 
 			Sensitivity = 1.0f;
 			LowerDeadZone = 0.2f;
