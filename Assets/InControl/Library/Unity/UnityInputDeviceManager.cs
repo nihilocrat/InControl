@@ -117,14 +117,18 @@ namespace InControl
 				return;
 			}
 
-			if (Application.platform == RuntimePlatform.OSXEditor ||
-			    Application.platform == RuntimePlatform.OSXPlayer ||
-			    Application.platform == RuntimePlatform.OSXWebPlayer)
+			// PS4 controller works properly as of Unity 4.5
+			if (InputManager.UnityVersion <= new VersionInfo( 4, 5 ))
 			{
-				if (unityJoystickName == "Unknown Wireless Controller")
+				if (Application.platform == RuntimePlatform.OSXEditor ||
+				    Application.platform == RuntimePlatform.OSXPlayer ||
+				    Application.platform == RuntimePlatform.OSXWebPlayer)
 				{
-					// Ignore PS4 controller in Bluetooth mode on Mac since it connects but does nothing.
-					return;
+					if (unityJoystickName == "Unknown Wireless Controller")
+					{
+						// Ignore PS4 controller in Bluetooth mode on Mac since it connects but does nothing.
+						return;
+					}
 				}
 			}
 
@@ -213,38 +217,12 @@ namespace InControl
 
 		void AutoDiscoverDeviceProfiles()
 		{
-			/*
-			var unityInputDeviceProfileType = typeof(InControl.UnityInputDeviceProfile);
-			var autoDiscoverAttributeType = typeof(InControl.AutoDiscover);
-
-			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-			{
-				foreach (var type in assembly.GetTypes())
-				{
-					if (type.IsSubclassOf( unityInputDeviceProfileType ))
-					{
-						var typeAttrs = type.GetCustomAttributes( autoDiscoverAttributeType, false );
-						if (typeAttrs != null && typeAttrs.Length > 0)
-						{
-							var deviceProfile = (UnityInputDeviceProfile) Activator.CreateInstance( type );
-							
-							if (deviceProfile.IsSupportedOnThisPlatform)
-							{
-								Logger.LogInfo( "Adding profile: " + type.Name + " (" + deviceProfile.Name + ")" );
-								deviceProfiles.Add( deviceProfile );
-							}
-						}
-					}
-				}
-			}
-			*/
-
 			foreach (var typeName in UnityInputDeviceProfileList.Profiles)
 			{				
 				var deviceProfile = (UnityInputDeviceProfile) Activator.CreateInstance( Type.GetType( typeName ) );
 				if (deviceProfile.IsSupportedOnThisPlatform)
 				{
-					Logger.LogInfo( "Found profile: " + deviceProfile.GetType().Name + " (" + deviceProfile.Name + ")" );
+					// Logger.LogInfo( "Found profile: " + deviceProfile.GetType().Name + " (" + deviceProfile.Name + ")" );
 					deviceProfiles.Add( deviceProfile );
 				}
 			}

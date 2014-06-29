@@ -5,6 +5,10 @@ using System.Linq;
 using UnityEngine;
 using InControl;
 
+//#if UNITY_EDITOR
+//using UnityEditor;
+//#endif
+
 
 /**
  * WARNING: This is NOT an example of how to use InControl.
@@ -21,8 +25,10 @@ namespace InControl
 		bool isPaused;
 
 
-		void Start()
+		void OnEnable()
 		{
+			Debug.Log( "InControl (version " + InputManager.Version + ") on Unity " + InputManager.UnityVersion );
+
 			isPaused = false;
 			Time.timeScale = 1.0f;
 
@@ -31,15 +37,14 @@ namespace InControl
 //			InputManager.HideDevicesWithProfile( typeof( Xbox360MacProfile ) );
 //			InputManager.InvertYAxis = true;
 //			InputManager.EnableXInput = true;
-			InputManager.Setup();
 
 			InputManager.OnDeviceAttached += inputDevice => Debug.Log( "Attached: " + inputDevice.Name );
 			InputManager.OnDeviceDetached += inputDevice => Debug.Log( "Detached: " + inputDevice.Name );
 			InputManager.OnActiveDeviceChanged += inputDevice => Debug.Log( "Active device changed to: " + inputDevice.Name );
 
-			TestInputMappings();
+			InputManager.Setup();
 
-			Debug.Log( "InControl (version " + InputManager.Version + ")" );
+			TestInputMappings();
 		}
 
 
@@ -47,6 +52,16 @@ namespace InControl
 		{
 			InputManager.Update();
 			CheckForPauseButton();
+
+			var inputDevice = InputManager.ActiveDevice;
+			if (inputDevice.Direction.Left.WasPressed)
+			{
+				Debug.Log( "Left.WasPressed" );
+			}
+			if (inputDevice.Direction.Left.WasReleased)
+			{
+				Debug.Log( "Left.WasReleased" );
+			}
 		}
 
 
@@ -94,6 +109,13 @@ namespace InControl
 			info += " (Platform: " + InputManager.Platform + ")";
 //			info += " (Joysticks " + InputManager.JoystickHash + ")";
 			info += " " + InputManager.ActiveDevice.Direction.Vector;
+
+//			#if UNITY_EDITOR
+//			if (EditorWindow.focusedWindow != null)
+//			{
+//				info += " " + EditorWindow.focusedWindow.ToString();
+//			}
+//			#endif
 
 			if (isPaused)
 			{

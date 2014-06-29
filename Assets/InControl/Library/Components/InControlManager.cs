@@ -9,14 +9,21 @@ namespace InControl
 {
 	public class InControlManager : MonoBehaviour
 	{
+		public bool logDebugInfo = false;
 		public bool invertYAxis = false;
 		public bool enableXInput = false;
 		public bool useFixedUpdate = false;
 		public List<string> customProfiles = new List<string>();
 
 
-		void Start()
+		void OnEnable()
 		{
+			if (logDebugInfo)
+			{
+				Debug.Log( "InControl (version " + InputManager.Version + ")" );
+				Logger.OnLogMessage += LogMessage;
+			}
+
 			InputManager.InvertYAxis = invertYAxis;
 			InputManager.EnableXInput = enableXInput;
 			InputManager.Setup();
@@ -33,9 +40,7 @@ namespace InControl
 					var customProfileInstance = Activator.CreateInstance( classType ) as UnityInputDeviceProfile;
 					InputManager.AttachDevice( new UnityInputDevice( customProfileInstance ) );
 				}
-			}
-			
-			Debug.Log( "InControl (version " + InputManager.Version + ")" );
+			}			
 		}
 
 
@@ -59,7 +64,23 @@ namespace InControl
 
 		void OnApplicationQuit()
 		{
+		}
 
+
+		void LogMessage( LogMessage logMessage )
+		{
+			switch (logMessage.type)
+			{
+			case LogMessageType.Info:
+				Debug.Log( logMessage.text );
+				break;
+			case LogMessageType.Warning:
+				Debug.LogWarning( logMessage.text );
+				break;
+			case LogMessageType.Error:
+				Debug.LogError( logMessage.text );
+				break;
+			}
 		}
 	}
 }

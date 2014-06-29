@@ -145,7 +145,14 @@ namespace InControl
 			if (obverseTarget.HasValue)
 			{
 				var obverseControl = GetControl( obverseTarget.Value );
-				analogValue = ApplyCircularDeadZone( analogValue, obverseControl.PreValue.Value, control.LowerDeadZone, control.UpperDeadZone );
+				if (obverseControl.PreValue.HasValue)
+				{
+					analogValue = ApplyCircularDeadZone( analogValue, obverseControl.PreValue.Value, control.LowerDeadZone, control.UpperDeadZone );
+				}
+				else
+				{
+					analogValue = ApplyDeadZone( analogValue, control.LowerDeadZone, control.UpperDeadZone );
+				}
 			}
 			else
 			{
@@ -296,19 +303,28 @@ namespace InControl
 
 		public float DPadX
 		{
-			get { return DPad.X; }
+			get 
+			{ 
+				return DPad.X; 
+			}
 		}
 
 
 		public float DPadY
 		{
-			get { return DPad.Y; }
+			get 
+			{ 
+				return DPad.Y; 
+			}
 		}
 
 
 		public TwoAxisInputControl Direction
 		{
-			get { return DPad.State ? DPad : LeftStick; }
+			get 
+			{ 
+				return DPad.UpdateTick > LeftStick.UpdateTick ? DPad : LeftStick; 
+			}
 		}
 	}
 }
