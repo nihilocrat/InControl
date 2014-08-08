@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 
@@ -22,7 +24,8 @@ namespace InControl
 		static List<InputDeviceManager> inputDeviceManagers = new List<InputDeviceManager>();
 
 		static InputDevice activeDevice = InputDevice.Null;
-		public static List<InputDevice> Devices = new List<InputDevice>();
+		static List<InputDevice> devices = new List<InputDevice>();
+		public static ReadOnlyCollection<InputDevice> Devices;
 
 		public static string Platform { get; private set; }
 		public static bool MenuWasPressed { get; private set; }
@@ -40,16 +43,21 @@ namespace InControl
 
 		public static void Setup()
 		{
+			if (isSetup)
+			{
+				return;
+			}
+
 			Platform = (SystemInfo.operatingSystem + " " + SystemInfo.deviceModel).ToUpper();
 
 			initialTime = 0.0f;
 			currentTime = 0.0f;
 			lastUpdateTime = 0.0f;
-
 			currentTick = 0;
 
 			inputDeviceManagers.Clear();
-			Devices.Clear();
+			devices.Clear();
+			Devices = new ReadOnlyCollection<InputDevice>( devices );
 			activeDevice = InputDevice.Null;
 
 			isSetup = true;
@@ -68,6 +76,22 @@ namespace InControl
 				OnSetup.Invoke();
 				OnSetup = null;
 			}
+		}
+
+
+		public static void Reset()
+		{
+			OnSetup = null;
+			OnUpdate = null;
+			OnActiveDeviceChanged = null;
+			OnDeviceAttached = null;
+			OnDeviceDetached = null;
+
+			inputDeviceManagers.Clear();
+			devices.Clear();
+			activeDevice = InputDevice.Null;
+			
+			isSetup = false;
 		}
 
 
@@ -105,14 +129,46 @@ namespace InControl
 		}
 
 
+		public static void OnApplicationFocus( bool focusState )
+		{
+			if (!focusState)
+			{
+				int deviceCount = devices.Count;
+				for (int i = 0; i < deviceCount; i++)
+				{
+					var inputControls = devices[i].Controls;
+					var inputControlCount = inputControls.Length;
+					for (int j = 0; j < inputControlCount; j++)
+					{
+						var inputControl = inputControls[j];
+						if (inputControl != null)
+						{
+							inputControl.SetZeroTick();
+						}
+					}
+				}
+			}
+		}
+
+
+		public static void OnApplicationPause( bool pauseState ) 
+		{
+		}
+
+
+		public static void OnApplicationQuit()
+		{
+		}
+
+
 		static void UpdateActiveDevice()
 		{
 			var lastActiveDevice = ActiveDevice;
 
-			int deviceCount = Devices.Count;
+			int deviceCount = devices.Count;
 			for (int i = 0; i < deviceCount; i++)
 			{
-				var inputDevice = Devices[i];
+				var inputDevice = devices[i];
 				if (ActiveDevice == InputDevice.Null ||
 					inputDevice.LastChangedAfter( ActiveDevice ))
 				{
@@ -166,10 +222,10 @@ namespace InControl
 		{
 			MenuWasPressed = false;
 			
-			int deviceCount = Devices.Count;
+			int deviceCount = devices.Count;
 			for (int i = 0; i < deviceCount; i++)
 			{
-				var device = Devices[i];
+				var device = devices[i];
 				device.PreUpdate( currentTick, deltaTime );
 			}
 		}
@@ -177,10 +233,10 @@ namespace InControl
 
 		static void UpdateDevices( float deltaTime )
 		{
-			int deviceCount = Devices.Count;
+			int deviceCount = devices.Count;
 			for (int i = 0; i < deviceCount; i++)
 			{
-				var device = Devices[i];
+				var device = devices[i];
 				device.Update( currentTick, deltaTime );
 			}
 
@@ -193,10 +249,10 @@ namespace InControl
 
 		static void PostUpdateDevices( float deltaTime )
 		{			
-			int deviceCount = Devices.Count;
+			int deviceCount = devices.Count;
 			for (int i = 0; i < deviceCount; i++)
 			{
-				var device = Devices[i];
+				var device = devices[i];
 				
 				device.PostUpdate( currentTick, deltaTime );
 				
@@ -217,8 +273,8 @@ namespace InControl
 				return;
 			}
 
-			Devices.Add( inputDevice );
-			Devices.Sort( ( d1, d2 ) => d1.SortOrder.CompareTo( d2.SortOrder ) );
+			devices.Add( inputDevice );
+			devices.Sort( ( d1, d2 ) => d1.SortOrder.CompareTo( d2.SortOrder ) );
 
 			if (OnDeviceAttached != null)
 			{
@@ -236,8 +292,8 @@ namespace InControl
 		{
 			AssertIsSetup();
 
-			Devices.Remove( inputDevice );
-			Devices.Sort( ( d1, d2 ) => d1.SortOrder.CompareTo( d2.SortOrder ) );
+			devices.Remove( inputDevice );
+			devices.Sort( ( d1, d2 ) => d1.SortOrder.CompareTo( d2.SortOrder ) );
 
 			if (ActiveDevice == inputDevice)
 			{
@@ -253,7 +309,11 @@ namespace InControl
 
 		public static void HideDevicesWithProfile( Type type )
 		{
+			#if !UNITY_EDITOR && UNITY_WINRT
+			if (type.GetTypeInfo().IsAssignableFrom( typeof( UnityInputDeviceProfile ).GetTypeInfo() ))
+			#else
 			if (type.IsSubclassOf( typeof( UnityInputDeviceProfile ) ))
+			#endif
 			{
 				UnityInputDeviceProfile.Hide( type );
 			}
@@ -264,7 +324,7 @@ namespace InControl
 		{
 			get 
 			{ 
-				return (Devices.Count > 0) ? Devices[0] : InputDevice.Null; 
+				return (devices.Count > 0) ? devices[0] : InputDevice.Null; 
 			}
 		}
 
@@ -292,10 +352,6 @@ namespace InControl
 
 			set
 			{
-				if (isSetup)
-				{
-					throw new Exception( "InputManager.EnableXInput must be set before calling InputManager.Setup()." );
-				}
 				enableXInput = value;
 			}
 		}
