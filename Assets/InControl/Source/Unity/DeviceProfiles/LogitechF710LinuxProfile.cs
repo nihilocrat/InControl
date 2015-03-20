@@ -1,46 +1,43 @@
-﻿using System;
+using System;
 
 
 namespace InControl
 {
 	// @cond nodoc
 	[AutoDiscover]
-	public class PlayStationVitaPSMProfile : UnityInputDeviceProfile
+	public class LogitechF710LinuxProfile : UnityInputDeviceProfile
 	{
-		public PlayStationVitaPSMProfile()
+		public LogitechF710LinuxProfile()
 		{
-			Name = "PlayStation Mobile";
-			Meta = "PlayStation Mobile on Vita";
+			Name = "Logitech F710 Controller";
+			Meta = "Logitech F710 Controller on Linux";
 
 			SupportedPlatforms = new[] {
-				"PSM UNITY FOR PSM",
-				"PSM ON PS VITA",
-				"PS VITA",
-				"PSP2OS"
+				"Linux"
 			};
 
 			JoystickNames = new[] {
-				"PS Vita"
+				"Logitech Gamepad F710"
 			};
 
 			ButtonMappings = new[] {
 				new InputControlMapping {
-					Handle = "Cross",
+					Handle = "A",
 					Target = InputControlType.Action1,
 					Source = Button0
 				},
 				new InputControlMapping {
-					Handle = "Circle",
+					Handle = "B",
 					Target = InputControlType.Action2,
 					Source = Button1
 				},
 				new InputControlMapping {
-					Handle = "Square",
+					Handle = "X",
 					Target = InputControlType.Action3,
 					Source = Button2
 				},
 				new InputControlMapping {
-					Handle = "Triangle",
+					Handle = "Y",
 					Target = InputControlType.Action4,
 					Source = Button3
 				},
@@ -55,14 +52,24 @@ namespace InControl
 					Source = Button5
 				},
 				new InputControlMapping {
-					Handle = "Select",
-					Target = InputControlType.Select,
-					Source = Button6
+					Handle = "Left Stick Button",
+					Target = InputControlType.LeftStickButton,
+					Source = Button9
+				},
+				new InputControlMapping {
+					Handle = "Right Stick Button",
+					Target = InputControlType.RightStickButton,
+					Source = Button10
 				},
 				new InputControlMapping {
 					Handle = "Start",
 					Target = InputControlType.Start,
 					Source = Button7
+				},
+				new InputControlMapping {
+					Handle = "Back",
+					Target = InputControlType.Select,
+					Source = Button6
 				}
 			};
 
@@ -90,9 +97,19 @@ namespace InControl
 					Invert = true
 				},
 				new InputControlMapping {
+					Handle = "Left Trigger",
+					Target = InputControlType.LeftTrigger,
+					Source = Analog2
+				},
+				new InputControlMapping {
+					Handle = "Right Trigger",
+					Target = InputControlType.RightTrigger,
+					Source = Analog5
+				},
+				new InputControlMapping {
 					Handle = "DPad Left",
 					Target = InputControlType.DPadLeft,
-					Source = Analog5,
+					Source = Analog6,
 					SourceRange = InputControlMapping.Range.Negative,
 					TargetRange = InputControlMapping.Range.Negative,
 					Invert = true
@@ -100,26 +117,27 @@ namespace InControl
 				new InputControlMapping {
 					Handle = "DPad Right",
 					Target = InputControlType.DPadRight,
-					Source = Analog5,
+					Source = Analog6,
 					SourceRange = InputControlMapping.Range.Positive,
 					TargetRange = InputControlMapping.Range.Positive
 				},
 				new InputControlMapping {
 					Handle = "DPad Up",
 					Target = InputControlType.DPadUp,
-					Source = Analog6,
-					SourceRange = InputControlMapping.Range.Positive,
-					TargetRange = InputControlMapping.Range.Positive
+					Source = Analog7,
+					SourceRange = InputControlMapping.Range.Negative,
+					TargetRange = InputControlMapping.Range.Negative,
+					Invert = true
 				},
 				new InputControlMapping {
 					Handle = "DPad Down",
 					Target = InputControlType.DPadDown,
-					Source = Analog6,
-					SourceRange = InputControlMapping.Range.Negative,
-					TargetRange = InputControlMapping.Range.Negative,
-					Invert = true
+					Source = Analog7,
+					SourceRange = InputControlMapping.Range.Positive,
+					TargetRange = InputControlMapping.Range.Positive
 				}
 			};
 		}
 	}
 }
+

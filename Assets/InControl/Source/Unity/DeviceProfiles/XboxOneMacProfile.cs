@@ -4,63 +4,72 @@ using System;
 namespace InControl
 {
 	// @cond nodoc
-	// Tested with Samsung Galaxy Note 2 connected by OTG cable.
 	[AutoDiscover]
-	public class PlayStation4AndroidProfile : UnityInputDeviceProfile
+	public class XboxOneMacProfile : UnityInputDeviceProfile
 	{
-		public PlayStation4AndroidProfile()
+		public XboxOneMacProfile()
 		{
-			Name = "PlayStation 4 Controller";
-			Meta = "PlayStation 4 Controller on Android";
+			Name = "XBox One Controller";
+			Meta = "XBox One Controller on OSX";
 
 			SupportedPlatforms = new[] {
-				"Android"
+				"OS X"
 			};
 
 			JoystickNames = new[] {
-				"Sony Computer Entertainment Wireless Controller"
+				"Microsoft Xbox One Wired Controller"
 			};
 
 			ButtonMappings = new[] {
 				new InputControlMapping {
-					Handle = "Cross",
+					Handle = "A",
 					Target = InputControlType.Action1,
-					Source = Button1
+					Source = Button16
 				},
 				new InputControlMapping {
-					Handle = "Circle",
+					Handle = "B",
 					Target = InputControlType.Action2,
-					Source = Button13
+					Source = Button17
 				},
 				new InputControlMapping {
-					Handle = "Square",
+					Handle = "X",
 					Target = InputControlType.Action3,
-					Source = Button0
+					Source = Button18
 				},
 				new InputControlMapping {
-					Handle = "Triangle",
+					Handle = "Y",
 					Target = InputControlType.Action4,
-					Source = Button2
+					Source = Button19
+				},
+				new InputControlMapping {
+					Handle = "DPad Left",
+					Target = InputControlType.DPadLeft,
+					Source = Button7
+				},
+				new InputControlMapping {
+					Handle = "DPad Right",
+					Target = InputControlType.DPadRight,
+					Source = Button8
+				},
+				new InputControlMapping {
+					Handle = "DPad Up",
+					Target = InputControlType.DPadUp,
+					Source = Button5
+				},
+				new InputControlMapping {
+					Handle = "DPad Down",
+					Target = InputControlType.DPadDown,
+					Source = Button6,
 				},
 				new InputControlMapping {
 					Handle = "Left Bumper",
 					Target = InputControlType.LeftBumper,
-					Source = Button3
+					Source = Button13
 				},
 				new InputControlMapping {
 					Handle = "Right Bumper",
 					Target = InputControlType.RightBumper,
 					Source = Button14
-				},
-				new InputControlMapping {
-					Handle = "Share",
-					Target = InputControlType.Share,
-					Source = Button7
-				},
-				new InputControlMapping {
-					Handle = "Options",
-					Target = InputControlType.Options,
-					Source = Button6
 				},
 				new InputControlMapping {
 					Handle = "Left Stick Button",
@@ -70,7 +79,22 @@ namespace InControl
 				new InputControlMapping {
 					Handle = "Right Stick Button",
 					Target = InputControlType.RightStickButton,
+					Source = Button12
+				},
+				new InputControlMapping {
+					Handle = "View",
+					Target = InputControlType.View,
 					Source = Button10
+				},
+				new InputControlMapping {
+					Handle = "Menu",
+					Target = InputControlType.Menu,
+					Source = Button9
+				},
+				new InputControlMapping {
+					Handle = "Guide",
+					Target = InputControlType.System,
+					Source = Button15
 				}
 			};
 
@@ -89,57 +113,29 @@ namespace InControl
 				new InputControlMapping {
 					Handle = "Right Stick X",
 					Target = InputControlType.RightStickX,
-					Source = Analog13
+					Source = Analog2
 				},
 				new InputControlMapping {
 					Handle = "Right Stick Y",
 					Target = InputControlType.RightStickY,
-					Source = Analog14,
+					Source = Analog3,
 					Invert = true
 				},
 				new InputControlMapping {
 					Handle = "Left Trigger",
 					Target = InputControlType.LeftTrigger,
-					Source = Analog2,
+					Source = Analog4,
 					SourceRange = InputControlMapping.Range.Complete,
 					TargetRange = InputControlMapping.Range.Positive,
+					IgnoreInitialZeroValue = true
 				},
 				new InputControlMapping {
 					Handle = "Right Trigger",
 					Target = InputControlType.RightTrigger,
-					Source = Analog3,
+					Source = Analog5,
 					SourceRange = InputControlMapping.Range.Complete,
 					TargetRange = InputControlMapping.Range.Positive,
-				},
-				new InputControlMapping {
-					Handle = "DPad Left",
-					Target = InputControlType.DPadLeft,
-					Source = Analog4,
-					SourceRange = InputControlMapping.Range.Negative,
-					TargetRange = InputControlMapping.Range.Negative,
-					Invert = true
-				},
-				new InputControlMapping {
-					Handle = "DPad Right",
-					Target = InputControlType.DPadRight,
-					Source = Analog4,
-					SourceRange = InputControlMapping.Range.Positive,
-					TargetRange = InputControlMapping.Range.Positive
-				},
-				new InputControlMapping {
-					Handle = "DPad Up",
-					Target = InputControlType.DPadUp,
-					Source = Analog5,
-					SourceRange = InputControlMapping.Range.Negative,
-					TargetRange = InputControlMapping.Range.Negative,
-					Invert = true
-				},
-				new InputControlMapping {
-					Handle = "DPad Down",
-					Target = InputControlType.DPadDown,
-					Source = Analog5,
-					SourceRange = InputControlMapping.Range.Positive,
-					TargetRange = InputControlMapping.Range.Positive,
+					IgnoreInitialZeroValue = true
 				}
 			};
 		}
